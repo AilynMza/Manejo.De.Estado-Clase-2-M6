@@ -1,21 +1,34 @@
 import { useState } from "react";
 
 function ListaCompras() {
-  // Definir el estado para la lista de compras
   const [productos, setProductos] = useState([]);
+  const [productosOriginales, setProductosOriginales] = useState([]);
   const [nuevoProducto, setNuevoProducto] = useState("");
 
-  // Función para agregar un nuevo producto a la lista
   const agregarProducto = () => {
     if (nuevoProducto.trim() !== "") {
-      setProductos([...productos, nuevoProducto]);
+      const arregloBase = [...productosOriginales, nuevoProducto];
+      setProductosOriginales(arregloBase);
+      setProductos(arregloBase);
       setNuevoProducto("");
     }
   };
 
-  // Función para eliminar un producto de la lista
+  const filtrar = () => {
+    if (nuevoProducto.trim() === "") {
+      setProductos(productosOriginales);
+    } else {
+      const result = productosOriginales.filter((product) => product == nuevoProducto
+      );
+      setProductos(result);
+    }
+  };
+
   const eliminarProducto = (index) => {
-    // Completar la lógica para eliminar un producto
+    const arregloInicial = [...productosOriginales];
+    arregloInicial.splice(index, 1);
+    setProductosOriginales(arregloInicial);
+    setProductos(arregloInicial);
   };
 
   return (
@@ -27,6 +40,7 @@ function ListaCompras() {
         onChange={(e) => setNuevoProducto(e.target.value)}
       />
       <button onClick={agregarProducto}>Agregar</button>
+      <button onClick={filtrar}>Filtrar</button>
       <ul>
         {productos.map((producto, index) => (
           <li key={index}>
